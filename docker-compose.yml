@@ -1,7 +1,6 @@
-version: '3.8'
 services:
   frontend:
-    build: ./frontend
+    image: financial-dashboard-frontend:latest
     ports:
       - "3000:3000"
     depends_on:
@@ -10,7 +9,7 @@ services:
       - NEXT_PUBLIC_API_URL=http://localhost:5000
 
   backend:
-    build: ./backend
+    image: financial-dashboard-backend:latest
     ports:
       - "5000:5000"
     depends_on:
@@ -19,7 +18,7 @@ services:
       - DATABASE_URL=postgresql://user:password@postgres:5432/mydb
 
   ai-service:
-    build: ./ai-service
+    image: financial-dashboard-ai-service:latest
     ports:
       - "8000:8000"
     depends_on:
