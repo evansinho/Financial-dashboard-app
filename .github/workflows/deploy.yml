@@ -51,12 +51,12 @@ jobs:
 
       - name: Build and Push Docker Images
         run: |
-          docker build -t your-dockerhub-username/frontend:latest ./frontend
-          docker build -t your-dockerhub-username/backend:latest ./backend
-          docker build -t your-dockerhub-username/ai-service:latest ./ai-service
-          docker push your-dockerhub-username/frontend:latest
-          docker push your-dockerhub-username/backend:latest
-          docker push your-dockerhub-username/ai-service:latest
+          docker build -t your-dockerhub-username/financial-dashboard-frontend:latest ./frontend
+          docker build -t your-dockerhub-username/financial-dashboard-backend:latest ./backend
+          docker build -t your-dockerhub-username/financial-dashboard-ai-service:latest ./ai-service
+          docker push your-dockerhub-username/financial-dashboard-frontend:latest
+          docker push your-dockerhub-username/financial-dashboard-backend:latest
+          docker push your-dockerhub-username/financial-dashboard-ai-service:latest
 
       - name: Deploy to Server
         uses: appleboy/ssh-action@v0.1.5
@@ -65,8 +65,8 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            docker pull your-dockerhub-username/frontend:latest
-            docker pull your-dockerhub-username/backend:latest
-            docker pull your-dockerhub-username/ai-service:latest
+            docker pull your-dockerhub-username/financial-dashboard-frontend:latest
+            docker pull your-dockerhub-username/financial-dashboard-backend:latest
+            docker pull your-dockerhub-username/financial-dashboard-ai-service:latest
             docker-compose down
             docker-compose up -d
