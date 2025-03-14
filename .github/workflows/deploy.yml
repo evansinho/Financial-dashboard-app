@@ -68,8 +68,14 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
+            # Copy docker-compose.yml to the server
+            scp -o StrictHostKeyChecking=no -i ${{ secrets.SSH_PRIVATE_KEY }} ./docker-compose.yml ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:/home/ec2-user/financial-dashboard
+
+            # Pull the latest Docker images
             docker pull ${{ secrets.DOCKER_USERNAME }}/financial-dashboard-frontend:latest
             docker pull ${{ secrets.DOCKER_USERNAME }}/financial-dashboard-backend:latest
             docker pull ${{ secrets.DOCKER_USERNAME }}/financial-dashboard-ai-service:latest
-            docker-compose down
-            docker-compose up -d
+
+            # Stop and start the containers using docker-compose
+            docker-compose -f /home/ec2-user/financial-dashboard/docker-compose.yml down
+            docker-compose -f /home/ec2-user/financial-dashboard/docker-compose.yml up -d
