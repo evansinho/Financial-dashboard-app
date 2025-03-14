@@ -76,9 +76,9 @@ jobs:
             echo "Repository contents:"
             ls -R
 
-            # Check if docker-compose.yml exists
-            if [ ! -f ./docker-compose.yml ]; then
-              echo "Error: docker-compose.yml not found in the repository!"
+            # Check if docker-compose.yml exists in the financial-dashboard directory
+            if [ ! -f ./financial-dashboard/docker-compose.yml ]; then
+              echo "Error: docker-compose.yml not found in the financial-dashboard directory!"
               exit 1
             fi
 
@@ -86,7 +86,7 @@ jobs:
             ssh -o StrictHostKeyChecking=no -i /tmp/ssh_key ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} "docker system prune -a -f"
 
             # Copy docker-compose.yml to the server
-            scp -o StrictHostKeyChecking=no -i /tmp/ssh_key ./docker-compose.yml ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:/home/ec2-user/financial-dashboard/
+            scp -o StrictHostKeyChecking=no -i /tmp/ssh_key ./financial-dashboard/docker-compose.yml ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:/home/ec2-user/financial-dashboard/
 
             # Pull the latest Docker images
             ssh -o StrictHostKeyChecking=no -i /tmp/ssh_key ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} "
