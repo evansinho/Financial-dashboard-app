@@ -72,6 +72,10 @@ jobs:
             echo "${{ secrets.SSH_PRIVATE_KEY }}" > /tmp/ssh_key
             chmod 600 /tmp/ssh_key
 
+            # Debug: List files in the repository
+            echo "Repository contents:"
+            ls -R
+
             # Check if docker-compose.yml exists
             if [ ! -f ./docker-compose.yml ]; then
               echo "Error: docker-compose.yml not found in the repository!"
