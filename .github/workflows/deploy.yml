@@ -72,15 +72,27 @@ jobs:
             echo "${{ secrets.SSH_PRIVATE_KEY }}" > /tmp/ssh_key
             chmod 600 /tmp/ssh_key
 
+            # Check if docker-compose.yml exists
+            if [ ! -f ./docker-compose.yml ]; then
+              echo "Error: docker-compose.yml not found in the repository!"
+              exit 1
+            fi
+
+            # Clean up unused Docker resources on the server
+            ssh -o StrictHostKeyChecking=no -i /tmp/ssh_key ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} "docker system prune -a -f"
+
             # Copy docker-compose.yml to the server
             scp -o StrictHostKeyChecking=no -i /tmp/ssh_key ./docker-compose.yml ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:/home/ec2-user/financial-dashboard/
 
             # Pull the latest Docker images
-            docker pull ${{ secrets.DOCKER_USERNAME }}/financial-dashboard-frontend:latest
-            docker pull ${{ secrets.DOCKER_USERNAME }}/financial-dashboard-backend:latest
-            docker pull ${{ secrets.DOCKER_USERNAME }}/financial-dashboard-ai-service:latest
+            ssh -o StrictHostKeyChecking=no -i /tmp/ssh_key ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} "
+              docker pull ${{ secrets.DOCKER_USERNAME }}/financial-dashboard-frontend:latest
+              docker pull ${{ secrets.DOCKER_USERNAME }}/financial-dashboard-backend:latest
+              docker pull ${{ secrets.DOCKER_USERNAME }}/financial-dashboard-ai-service:latest
+            "
 
             # Stop and start the containers using docker-compose
-            docker-compose -f /home/ec2-user/financial-dashboard/docker-compose.yml down
-            docker-compose -f /home/ec2-user/financial-dashboard/docker-compose.yml up -d
-            
+            ssh -o StrictHostKeyChecking=no -i /tmp/ssh_key ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} "
+              docker-compose -f /home/ec2-user/financial-dashboard/docker-compose.yml down
+              docker-compose -f /home/ec2-user/financial-dashboard/docker-compose.yml up -d
+            "
