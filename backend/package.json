@@ -2,7 +2,10 @@
   "name": "backend",
   "version": "1.0.0",
   "main": "index.js",
+  "type": "module",
   "scripts": {
+    "dev": "nodemon src/index.js",
+    "start": "node src/index.js",
     "test": "echo \"No tests found\" && exit 0"
   },
   "keywords": [],
@@ -17,8 +20,13 @@
     "express": "^4.21.2",
     "helmet": "^8.0.0",
     "jsonwebtoken": "^9.0.2",
-    "prisma": "^6.5.0",
+    "passport": "^0.7.0",
+    "passport-google-oauth20": "^2.0.0",
     "redis": "^4.7.0",
     "stripe": "^17.7.0"
+  },
+  "devDependencies": {
+    "@types/jsonwebtoken": "^9.0.9",
+    "prisma": "^6.5.0"
   }
 }
