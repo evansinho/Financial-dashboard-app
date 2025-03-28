@@ -14,12 +14,35 @@ datasource db {
 }
 
 model User {
-  id             String   @id @default(uuid())
-  name           String?
-  email          String   @unique
-  password       String?  // For JWT auth
-  provider       String   // 'local' or 'google/github'
-  providerId     String?  // OAuth provider ID
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  id          String        @id @default(uuid())
+  name        String?
+  email       String        @unique
+  password    String? // For JWT auth
+  provider    String // 'local' or 'google/github'
+  providerId  String? // OAuth provider ID
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  Transaction Transaction[]
+}
+
+model Transaction {
+  id          String            @id @default(uuid())
+  userId      String
+  user        User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  amount      Decimal
+  type        TransactionType
+  category    String
+  date        DateTime          @default(now())
+  description String?
+  source      TransactionSource @default(manual)
+}
+
+enum TransactionType {
+  income
+  expense
+}
+
+enum TransactionSource {
+  manual
+  bank
 }
