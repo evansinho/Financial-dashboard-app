@@ -6,9 +6,9 @@ import {
     getTransactions,
     updateTransaction,
     deleteTransaction,
-    getPlaidAccessToken,
-    fetchBankTransactions
-  } from "../controllers/transactionController.js";
+    getUserTransactions
+} from "../controllers/transactionController.js";
+import { authenticate } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
@@ -16,11 +16,12 @@ router.post('/register', registerUser);
 router.post('/login', loginUser);
 router.get("/google", googleAuth);
 router.get("/google/callback", passport.authenticate("google", { session: false }), googleAuthCallback);
-router.post("/transactions", createTransaction);
-router.get("/transactions", getTransactions);
-router.put("/transactions/:id", updateTransaction);
-router.delete("/transactions/:id", deleteTransaction);
-router.post("/plaid/token", getPlaidAccessToken);
-router.post("/plaid/transactions", fetchBankTransactions);
+
+// Protect routes with authentication middleware
+router.post("/transactions", authenticate, createTransaction);
+router.get("/transactions", authenticate, getTransactions);
+router.put("/transactions/:id", authenticate, updateTransaction);
+router.delete("/transactions/:id", authenticate, deleteTransaction);
+router.get("/transactions/user", authenticate, getUserTransactions);
 
 export default router;
